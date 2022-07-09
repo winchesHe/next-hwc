@@ -1,9 +1,10 @@
-import type { NextPage } from 'next'
-import styled from 'styled-components'
-import styles from '../styles/Home.module.css'
-import { Button } from 'antd'
+import type { NextPage } from 'next';
+import styled from 'styled-components';
+import styles from '../styles/Home.module.css';
+import { Button } from 'antd';
 import { Count } from './count/count';
-import axios from 'axios'
+import axios from 'axios';
+import { io } from 'socket.io-client';
 
 const Home: NextPage = () => {
   // 验证axios
@@ -12,6 +13,27 @@ const Home: NextPage = () => {
     console.log(res);
   }
   // send()
+
+  // socket-io
+  const socket = io('http://localhost:3000');
+  socket.on('connect', function() {
+    console.log('Connected');
+
+    // 创建新用户
+    // socket.emit('createMq', {username: 'winches', password: '123456'}, res => {
+    //   console.log(res);
+    // })
+
+    // 查找全部用户
+    socket.emit('findAllMq', (res: any) => {
+      console.log(res);
+    })
+
+    // 根据id查找用户
+    socket.emit('findOneMq', 1, (res: any) => {
+      console.log(res);
+    })
+  })
 
   return (
     <div className={styles.container}>
